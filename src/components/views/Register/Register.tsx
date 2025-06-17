@@ -1,10 +1,22 @@
 import useRegister from "@/pages/auth/register/useRegister";
-import { Button, Card, CardBody, Input } from "@nextui-org/react";
+import { cn } from "@/utils/cn";
+import { Button, Card, CardBody, Input, Spinner } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
+import { Controller } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 const Register = () => {
-  const { visibilePassword, handleVisiblePassword } = useRegister();
+  const {
+    visibilePassword,
+    handleVisiblePassword,
+    control,
+    handleSubmit,
+    handleRegister,
+    isPendingRegister,
+    errors,
+  } = useRegister();
+
+  console.log(errors);
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-10 lg:flex-row lg:gap-20">
@@ -28,69 +40,129 @@ const Register = () => {
           <h2 className="text-xl font-bold text-danger-500">Create Account</h2>
           <p className="mb-4 text-small">
             Have an account?&nbsp;
-            <Link href="/login" className="font-semibold text-danger-400">
+            <Link href="/auth/login" className="font-semibold text-danger-400">
               Login here
             </Link>
           </p>
-          <form className="flex w-80 flex-col gap-4">
-            <Input
-              type="text"
-              label="Fullname"
-              variant="bordered"
-              autoComplete="off"
+          {errors.root && (
+            <p className="mb-2 font-medium text-danger">
+              {errors?.root?.message}
+            </p>
+          )}
+          <form
+            className={
+              (cn("flex w-80 flex-col gap-4"),
+              Object.keys(errors).length > 0 ? "gap-2" : "gap-4")
+            }
+            onSubmit={handleSubmit(handleRegister)}
+          >
+            <Controller
+              name="fullName"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="text"
+                  label="Fullname"
+                  variant="bordered"
+                  autoComplete="off"
+                  isInvalid={errors.fullName !== undefined}
+                  errorMessage={errors.fullName?.message}
+                />
+              )}
             />
-            <Input
-              type="text"
-              label="Username"
-              variant="bordered"
-              autoComplete="off"
+            <Controller
+              name="username"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="text"
+                  label="Username"
+                  variant="bordered"
+                  autoComplete="off"
+                  isInvalid={errors.username !== undefined}
+                  errorMessage={errors.username?.message}
+                />
+              )}
             />
-            <Input
-              type="email"
-              label="Email"
-              variant="bordered"
-              autoComplete="off"
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="email"
+                  label="Email"
+                  variant="bordered"
+                  autoComplete="off"
+                  isInvalid={errors.email !== undefined}
+                  errorMessage={errors.email?.message}
+                />
+              )}
             />
-            <Input
-              type={visibilePassword.password ? "text" : "password"}
-              label="Password"
-              variant="bordered"
-              autoComplete="off"
-              endContent={
-                <button
-                  className="focus:outline-none"
-                  type="button"
-                  onClick={() => handleVisiblePassword("password")}
-                >
-                  {visibilePassword.password ? (
-                    <FaEye className="pointer-events-none text-xl text-default-400" />
-                  ) : (
-                    <FaEyeSlash className="pointer-events-none text-xl text-default-400" />
-                  )}
-                </button>
-              }
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type={visibilePassword.password ? "text" : "password"}
+                  label="Password"
+                  variant="bordered"
+                  autoComplete="off"
+                  isInvalid={errors.password !== undefined}
+                  errorMessage={errors.password?.message}
+                  endContent={
+                    <button
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={() => handleVisiblePassword("password")}
+                    >
+                      {visibilePassword.password ? (
+                        <FaEye className="pointer-events-none text-xl text-default-400" />
+                      ) : (
+                        <FaEyeSlash className="pointer-events-none text-xl text-default-400" />
+                      )}
+                    </button>
+                  }
+                />
+              )}
             />
-            <Input
-              type={visibilePassword.passwordConfirmation ? "text" : "password"}
-              label="Password Confirmation"
-              variant="bordered"
-              autoComplete="off"
-              endContent={
-                <button
-                  className="focus:outline-none"
-                  type="button"
-                  onClick={() => handleVisiblePassword("passwordConfirmation")}
-                >
-                  {visibilePassword.passwordConfirmation ? (
-                    <FaEye className="pointer-events-none text-xl text-default-400" />
-                  ) : (
-                    <FaEyeSlash className="pointer-events-none text-xl text-default-400" />
-                  )}
-                </button>
-              }
+            <Controller
+              name="confirmPassword"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type={visibilePassword.confirmPassword ? "text" : "password"}
+                  label="Password Confirmation"
+                  variant="bordered"
+                  autoComplete="off"
+                  isInvalid={errors.confirmPassword !== undefined}
+                  errorMessage={errors.confirmPassword?.message}
+                  endContent={
+                    <button
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={() => handleVisiblePassword("confirmPassword")}
+                    >
+                      {visibilePassword.confirmPassword ? (
+                        <FaEye className="pointer-events-none text-xl text-default-400" />
+                      ) : (
+                        <FaEyeSlash className="pointer-events-none text-xl text-default-400" />
+                      )}
+                    </button>
+                  }
+                />
+              )}
             />
             <Button color="danger" size="lg" type="submit">
-              Register
+              {isPendingRegister ? (
+                <Spinner color="white" size="sm"></Spinner>
+              ) : (
+                "Register"
+              )}
             </Button>
           </form>
         </CardBody>
