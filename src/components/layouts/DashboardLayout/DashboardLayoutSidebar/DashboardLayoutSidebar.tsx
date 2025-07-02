@@ -4,6 +4,7 @@ import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { CiLogout } from "react-icons/ci";
+import { SiReactrouter } from "react-icons/si";
 
 interface SidebarItem {
   key: string;
@@ -47,7 +48,9 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
             <ListboxItem
               key={item.key}
               className={cn("my-1 h-12 text-2xl", {
-                "bg-danger-500 text-white": item.href === router.pathname,
+                "bg-danger-500 text-white": router.pathname.startsWith(
+                  item.href,
+                ),
               })}
               startContent={item.icon}
               textValue={item.label}
