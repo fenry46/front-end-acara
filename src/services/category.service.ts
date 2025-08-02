@@ -1,10 +1,12 @@
 import instance from "@/libs/axios/instance";
 import endpoint from "./endpoint.constant";
-import { parseParameter } from "next/dist/shared/lib/router/utils/route-regex";
+import { ICategory } from "@/types/Category";
 
 const categoryServices = {
   getCategories: (params?: string) =>
     instance.get(`${endpoint.CATEGORY}?${params}`),
+  AddCategory: (payload: ICategory) =>
+    instance.post(endpoint.CATEGORY, payload),
 };
 
 export default categoryServices;
