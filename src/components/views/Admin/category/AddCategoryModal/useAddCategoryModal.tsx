@@ -73,7 +73,7 @@ const useAddCategoryModal = () => {
   };
 
   const addCategory = async (payload: ICategory) => {
-    const res = await categoryServices.AddCategory(payload);
+    const res = await categoryServices.addCategory(payload);
     return res;
   };
 
