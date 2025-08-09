@@ -6,15 +6,40 @@ import {
   CardHeader,
   Input,
   Skeleton,
+  Spinner,
   Textarea,
 } from "@nextui-org/react";
+import useInfoTab from "./useInfoTab";
+import { Controller } from "react-hook-form";
+import { useEffect } from "react";
 
 interface PropTypes {
   dataCategory: ICategory;
+  onUpdate: (data: ICategory) => void;
+  isPendingUpdate: boolean;
+  isSuccessUpdate: boolean;
 }
 
 const InfoTab = (props: PropTypes) => {
-  const { dataCategory } = props;
+  const { dataCategory, onUpdate, isPendingUpdate, isSuccessUpdate } = props;
+  const {
+    controlUpdateInfo,
+    errorsUpdateinfo,
+    handleSubmitUpdateInfo,
+    resetUpdateInfo,
+    setValueUpdateInfo,
+  } = useInfoTab();
+
+  useEffect(() => {
+    setValueUpdateInfo("name", `${dataCategory?.name}`);
+    setValueUpdateInfo("description", `${dataCategory?.description}`);
+  }, [dataCategory]);
+
+  useEffect(() => {
+    if (isSuccessUpdate) {
+      resetUpdateInfo();
+    }
+  }, [isSuccessUpdate]);
   return (
     <Card className="w-full p-4 lg:w-1/2">
       <CardHeader className="flex-col items-center">
@@ -24,32 +49,56 @@ const InfoTab = (props: PropTypes) => {
         </p>
       </CardHeader>
       <CardBody>
-        <form className="flex flex-col gap-4" onSubmit={() => {}}>
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={handleSubmitUpdateInfo(onUpdate)}
+        >
           <Skeleton isLoaded={!!dataCategory?.name} className="rounded-lg">
-            <Input
-              type="text"
-              className="mt-2"
-              label="Name"
-              labelPlacement="outside"
-              variant="bordered"
-              defaultValue={dataCategory?.name}
+            <Controller
+              name="name"
+              control={controlUpdateInfo}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  label="Name"
+                  variant="bordered"
+                  labelPlacement="outside"
+                  type="text"
+                  isInvalid={errorsUpdateinfo.name !== undefined}
+                  errorMessage={errorsUpdateinfo.name?.message}
+                  className="mt-2"
+                ></Input>
+              )}
             />
           </Skeleton>
           <Skeleton isLoaded={!!dataCategory?.name} className="rounded-lg">
-            <Textarea
-              className="mt-2"
-              label="Description"
-              labelPlacement="outside"
-              variant="bordered"
-              defaultValue={dataCategory?.description}
+            <Controller
+              name="description"
+              control={controlUpdateInfo}
+              render={({ field }) => (
+                <Textarea
+                  {...field}
+                  label="description"
+                  labelPlacement="outside"
+                  variant="bordered"
+                  isInvalid={errorsUpdateinfo.description !== undefined}
+                  errorMessage={errorsUpdateinfo.description?.message}
+                  className="mt-2"
+                ></Textarea>
+              )}
             />
           </Skeleton>
           <Button
             color="danger"
             className="mt-2 disabled:bg-default-500"
             type="submit"
+            disabled={isPendingUpdate || !dataCategory?._id}
           >
-            Save Changes
+            {isPendingUpdate ? (
+              <Spinner size="sm" color="white" />
+            ) : (
+              "Save Changes"
+            )}
           </Button>
         </form>
       </CardBody>
