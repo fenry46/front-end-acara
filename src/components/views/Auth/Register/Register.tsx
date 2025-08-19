@@ -16,8 +16,6 @@ const Register = () => {
     errors,
   } = useRegister();
 
-  console.log(errors);
-
   return (
     <div className="flex w-full flex-col items-center justify-center gap-10 lg:flex-row lg:gap-20">
       <div className="flex w-full flex-col items-center justify-center gap-10 lg:w-1/3">

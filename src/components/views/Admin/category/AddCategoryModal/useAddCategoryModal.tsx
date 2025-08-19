@@ -11,16 +11,17 @@ import * as yup from "yup";
 const schema = yup.object().shape({
   name: yup.string().required("Please input name"),
   description: yup.string().required("Please input description"),
-  icon: yup.mixed<FileList | string>().required("please input icon"),
+  icon: yup.mixed<FileList | string>().required("Please input icon"),
 });
 
 const useAddCategoryModal = () => {
   const { setToaster } = useContext(ToasterContext);
   const {
-    mutateUploadFile,
     isPendingMutateUploadFile,
-    mutateDeleteFile,
     isPendingMutateDeleteFile,
+
+    handleUploadFile,
+    handleDeletFile,
   } = useMediaHandling();
   const {
     control,
@@ -34,42 +35,30 @@ const useAddCategoryModal = () => {
     resolver: yupResolver(schema),
   });
   const preview = watch("icon");
+  const fileUrl = getValues("icon");
+
   const handleUploadIcon = (
     files: FileList,
     onChange: (files: FileList | undefined) => void,
   ) => {
-    if (files.length !== 0) {
-      onChange(files);
-      mutateUploadFile({
-        file: files[0],
-        callback: (fileUrl: string) => setValue("icon", fileUrl),
-      });
-    }
+    handleUploadFile(files, onChange, (fileUrl: string | undefined) => {
+      if (fileUrl) {
+        setValue("icon", fileUrl);
+      }
+    });
   };
 
   const handleDeleteIcon = (
     onChange: (files: FileList | undefined) => void,
   ) => {
-    const fileUrl = getValues("icon");
-    if (typeof fileUrl === "string") {
-      mutateDeleteFile({ fileUrl, callback: () => onChange(undefined) });
-    }
+    handleDeletFile(fileUrl, () => onChange(undefined));
   };
 
   const handleOnClose = (onClose: () => void) => {
-    const fileUrl = getValues("icon");
-    if (typeof fileUrl === "string") {
-      mutateDeleteFile({
-        fileUrl,
-        callback: () => {
-          reset();
-          onClose();
-        },
-      });
-    } else {
+    handleDeletFile(fileUrl, () => {
       reset();
       onClose();
-    }
+    });
   };
 
   const addCategory = async (payload: ICategory) => {

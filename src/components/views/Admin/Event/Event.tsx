@@ -1,23 +1,15 @@
 import DataTable from "@/components/ui/DataTable";
-import {
-  Button,
-  Chip,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  useDisclosure,
-} from "@nextui-org/react";
+import { Chip, useDisclosure } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { Key, ReactNode, useCallback, useEffect } from "react";
-import { CiMenuKebab } from "react-icons/ci";
 import COLUMN_LIST_EVENT from "./Event.constant";
 import useEvent from "./useEvent";
 import Image from "next/image";
 import useChangeUrl from "@/hooks/useChangeUrl";
 import DropdownAction from "@/components/commons/DropdownAction";
+import AddEventModal from "./AddEventModal";
 
-const Category = () => {
+const Event = () => {
   const { push, isReady, query } = useRouter();
   const {
     dataEvents,
@@ -94,8 +86,9 @@ const Category = () => {
           totalPages={dataEvents?.pagination.totalPages}
         />
       )}
+      <AddEventModal {...addEventModal} refetchEvents={refetchEvents} />
     </section>
   );
 };
 
-export default Category;
+export default Event;

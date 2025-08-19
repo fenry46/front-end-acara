@@ -92,7 +92,7 @@ const AddCategoryModal = (props: PropTypes) => {
                   ></Textarea>
                 )}
               />
-              <p className="text-sm font-bold"></p>
+              <p className="text-sm font-bold">Icon</p>
               <Controller
                 name="icon"
                 control={control}
