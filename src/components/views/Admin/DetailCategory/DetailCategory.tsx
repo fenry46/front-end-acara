@@ -6,7 +6,7 @@ import useDetailCategory from "./useDetailCategory";
 const DetailCategory = () => {
   const {
     dataCategory,
-    handleUpdateCateogry,
+    handleUpdateCategory,
     isPendingMutateUpdateCategory,
     isSuccessMutateUpdateCategory,
   } = useDetailCategory();
@@ -15,7 +15,7 @@ const DetailCategory = () => {
       <Tab key="icon" title="Icon">
         <IconTab
           currentIcon={dataCategory?.icon}
-          onUpdate={handleUpdateCateogry}
+          onUpdate={handleUpdateCategory}
           isPendingUpdate={isPendingMutateUpdateCategory}
           isSuccessUpdate={isSuccessMutateUpdateCategory}
         />
@@ -23,7 +23,7 @@ const DetailCategory = () => {
       <Tab key="info" title="Info">
         <InfoTab
           dataCategory={dataCategory}
-          onUpdate={handleUpdateCateogry}
+          onUpdate={handleUpdateCategory}
           isPendingUpdate={isPendingMutateUpdateCategory}
           isSuccessUpdate={isSuccessMutateUpdateCategory}
         />

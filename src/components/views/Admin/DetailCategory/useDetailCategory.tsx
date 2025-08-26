@@ -49,11 +49,11 @@ const useDetailCategory = () => {
     },
   });
 
-  const handleUpdateCateogry = (data: ICategory) => mutateUpdateCategory(data);
+  const handleUpdateCategory = (data: ICategory) => mutateUpdateCategory(data);
 
   return {
     dataCategory,
-    handleUpdateCateogry,
+    handleUpdateCategory,
     isPendingMutateUpdateCategory,
     isSuccessMutateUpdateCategory,
   };
