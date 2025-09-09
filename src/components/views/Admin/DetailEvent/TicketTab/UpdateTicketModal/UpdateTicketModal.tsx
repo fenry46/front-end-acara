@@ -9,38 +9,61 @@ import {
   Spinner,
   Textarea,
 } from "@nextui-org/react";
-import useAddTicketModal from "./useAddTicketModal";
+import useUpdateTicketModal from "./useUpdateTicketModal";
 import { Controller } from "react-hook-form";
-import { useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import { ITicket } from "@/types/Ticket";
 
 interface PropTypes {
   isOpen: boolean;
   onClose: () => void;
   onOpenChange: () => void;
   refetchTicket: () => void;
+  selectedDataTicket: ITicket | null;
+  setSelectedDataTicket: Dispatch<SetStateAction<ITicket | null>>;
 }
 
-const AddTicketModal = (props: PropTypes) => {
-  const { isOpen, onClose, refetchTicket, onOpenChange } = props;
+const UpdateTicketModal = (props: PropTypes) => {
+  const {
+    isOpen,
+    onClose,
+    refetchTicket,
+    onOpenChange,
+    selectedDataTicket,
+    setSelectedDataTicket,
+  } = props;
   const {
     control,
     errors,
     reset,
     handleSubmitForm,
-    handleAddTicket,
-    isPendingMutateAddTicket,
-    isSuccessMutateAddTicket,
-  } = useAddTicketModal();
+    handleUpdateTicket,
+    isPendingMutateUpdateTicket,
+    isSuccessMutateUpdateTicket,
+    setValueUpdateTicket,
+  } = useUpdateTicketModal(`${selectedDataTicket?._id}`);
+
   useEffect(() => {
-    if (isSuccessMutateAddTicket) {
+    if (isSuccessMutateUpdateTicket) {
       onClose();
       refetchTicket();
+      setSelectedDataTicket(null);
     }
-  }, [isSuccessMutateAddTicket]);
+  }, [isSuccessMutateUpdateTicket]);
+
+  useEffect(() => {
+    if (selectedDataTicket) {
+      setValueUpdateTicket("name", `${selectedDataTicket.name}`);
+      setValueUpdateTicket("price", `${selectedDataTicket.price}`);
+      setValueUpdateTicket("quantity", `${selectedDataTicket.quantity}`);
+      setValueUpdateTicket("description", `${selectedDataTicket.description}`);
+    }
+  }, [selectedDataTicket]);
 
   const handleOnClose = () => {
     reset();
     onClose();
+    setSelectedDataTicket(null);
   };
 
   return (
@@ -51,9 +74,9 @@ const AddTicketModal = (props: PropTypes) => {
       scrollBehavior="inside"
       onClose={handleOnClose}
     >
-      <form onSubmit={handleSubmitForm(handleAddTicket)}>
+      <form onSubmit={handleSubmitForm(handleUpdateTicket)}>
         <ModalContent className="m-4">
-          <ModalHeader>Add Ticket</ModalHeader>
+          <ModalHeader>Update Ticket</ModalHeader>
           <ModalBody>
             <div className="flex flex-col gap-2">
               <p className="text-sm font-bold"> Information</p>
@@ -121,19 +144,19 @@ const AddTicketModal = (props: PropTypes) => {
               color="danger"
               variant="flat"
               onPress={handleOnClose}
-              disabled={isPendingMutateAddTicket}
+              disabled={isPendingMutateUpdateTicket}
             >
               Cancel
             </Button>
             <Button
               color="danger"
               type="submit"
-              disabled={isPendingMutateAddTicket}
+              disabled={isPendingMutateUpdateTicket}
             >
-              {isPendingMutateAddTicket ? (
+              {isPendingMutateUpdateTicket ? (
                 <Spinner size="sm" color="white" />
               ) : (
-                "Create Ticket"
+                "Update Ticket"
               )}
             </Button>
           </ModalFooter>
@@ -143,4 +166,4 @@ const AddTicketModal = (props: PropTypes) => {
   );
 };
 
-export default AddTicketModal;
+export default UpdateTicketModal;
