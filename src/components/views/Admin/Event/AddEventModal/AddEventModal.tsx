@@ -20,6 +20,7 @@ import InputFile from "@/components/ui/InputFile";
 import { useEffect } from "react";
 import { ICategory } from "@/types/Category";
 import { IRegency } from "@/types/Event";
+import { getLocalTimeZone, now } from "@internationalized/date";
 
 interface PropTypes {
   isOpen: boolean;
@@ -38,6 +39,7 @@ const AddEventModal = (props: PropTypes) => {
     handleAddEvent,
     isPendingMutateAddEvent,
     isSuccessMutateAddEvent,
+    setValue,
     preview,
     handleUploadBanner,
     isPendingMutateUploadFile,
@@ -59,6 +61,12 @@ const AddEventModal = (props: PropTypes) => {
     isPendingMutateAddEvent ||
     isPendingMutateUploadFile ||
     isPendingMutateDeleteFile;
+
+  useEffect(() => {
+    setValue("startDate", now(getLocalTimeZone()));
+    setValue("endDate", now(getLocalTimeZone()));
+  }, [onOpenChange]);
+
   return (
     <Modal
       onOpenChange={onOpenChange}
@@ -196,6 +204,22 @@ const AddEventModal = (props: PropTypes) => {
                   )}
                 />
                 <Controller
+                  name="description"
+                  control={control}
+                  render={({ field }) => (
+                    <Textarea
+                      {...field}
+                      label="Description"
+                      variant="bordered"
+                      isInvalid={errors.description !== undefined}
+                      errorMessage={errors.description?.message}
+                    ></Textarea>
+                  )}
+                />
+              </div>
+              <p className="text-sm font-bold">Location</p>
+              <div className="mb-4 flex flex-col gap-4">
+                <Controller
                   name="isOnline"
                   control={control}
                   render={({ field }) => (
@@ -216,22 +240,6 @@ const AddEventModal = (props: PropTypes) => {
                     </Select>
                   )}
                 />
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => (
-                    <Textarea
-                      {...field}
-                      label="Description"
-                      variant="bordered"
-                      isInvalid={errors.description !== undefined}
-                      errorMessage={errors.description?.message}
-                    ></Textarea>
-                  )}
-                />
-              </div>
-              <p className="text-sm font-bold">Location</p>
-              <div className="mb-4 flex flex-col gap-4">
                 <Controller
                   name="region"
                   control={control}

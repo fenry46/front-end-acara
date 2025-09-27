@@ -7,7 +7,6 @@ import eventServices from "@/services/event.service";
 import { IEvent, IEventForm } from "@/types/Event";
 import { toDateStandart } from "@/utils/date";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { getLocalTimeZone, now } from "@internationalized/date";
 import { DateValue } from "@nextui-org/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
@@ -53,9 +52,6 @@ const useAddEventModal = () => {
   });
   const preview = watch("banner");
   const fileUrl = getValues("banner");
-
-  setValue("startDate", now(getLocalTimeZone()));
-  setValue("endDate", now(getLocalTimeZone()));
 
   const handleUploadBanner = (
     files: FileList,
@@ -127,8 +123,8 @@ const useAddEventModal = () => {
   const handleAddEvent = (data: IEventForm) => {
     const payload = {
       ...data,
-      startDate: data.startDate ? toDateStandart(data.startDate) : "",
-      endDate: data.endDate ? toDateStandart(data.endDate) : "",
+      startDate: toDateStandart(data.startDate as DateValue),
+      endDate: toDateStandart(data.endDate as DateValue),
       location: {
         address: `${data.address}`,
         region: `${data.region}`,
@@ -147,6 +143,7 @@ const useAddEventModal = () => {
     handleAddEvent,
     isPendingMutateAddEvent,
     isSuccessMutateAddEvent,
+    setValue,
 
     preview,
     handleUploadBanner,

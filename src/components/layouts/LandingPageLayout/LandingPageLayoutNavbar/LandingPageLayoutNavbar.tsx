@@ -82,7 +82,6 @@ const LandingPageLayoutNavbar = () => {
                   src={dataProfile?.profilePicture}
                   className="cursor-pointer"
                   showFallback
-                  name={dataProfile?.fullName}
                 />
               </DropdownTrigger>
               <DropdownMenu>
