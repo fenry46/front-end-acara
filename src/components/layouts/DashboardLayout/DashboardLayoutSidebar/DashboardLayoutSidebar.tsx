@@ -31,7 +31,7 @@ const DashboardLayoutSidebar = (props: PropTypes) => {
       )}
     >
       <div>
-        <div className="flex w-full justify-center">
+        <div className="flex w-full cursor-pointer justify-center">
           <Image
             src="/images/general/logo.svg"
             alt="logo"

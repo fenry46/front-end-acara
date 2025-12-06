@@ -14,7 +14,7 @@ const LIMIT_BANNER = 5;
 
 const LIMIT_EVENT = 4;
 
-const LIMIT_CATEGORY = 4;
+const LIMIT_CATEGORY = 8;
 
 export {
   LIMITS_LISTS,
